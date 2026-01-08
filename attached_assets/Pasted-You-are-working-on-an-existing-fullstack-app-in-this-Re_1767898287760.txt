@@ -1,0 +1,171 @@
+You are working on an existing fullstack app in this Replit project. 
+DO NOT start from scratch. DO NOT delete existing code.
+Modify and extend the current codebase.
+
+PROJECT CONTEXT
+- Frontend: React + Vite inside /client
+- Backend: Express API inside /server
+- TailwindCSS is already configured
+- Authentication, listings, plans, verification, and archiving already exist
+- Current issues:
+  1) Filters are incomplete
+  2) Some routes show a 404 Page Not Found
+  3) Branding says “Lotty.py” instead of “Lotty Paraguay”
+  4) No free trial plan
+  5) Typography is inconsistent
+
+TASKS (IMPLEMENT ALL)
+
+────────────────────────
+A) GLOBAL TYPOGRAPHY (MANDATORY)
+────────────────────────
+- Change ALL fonts in the app to **Montserrat**.
+- Use Montserrat for:
+  - headings
+  - body text
+  - buttons
+  - inputs
+  - navigation
+- Implement this properly by:
+  1) Importing Montserrat from Google Fonts
+  2) Configuring it in Tailwind config as the default font
+  3) Applying it globally (no per-component hacks)
+
+Implementation details:
+- Add Montserrat to index.html OR main entry file
+- Update tailwind.config.js:
+  fontFamily: {
+    sans: ['Montserrat', 'ui-sans-serif', 'system-ui']
+  }
+- Ensure no other font overrides remain
+
+────────────────────────
+B) BRANDING UPDATE
+────────────────────────
+- Replace all visible “Lotty.py” with **“Lotty Paraguay”**
+- Update:
+  - Navbar
+  - Footer
+  - Page titles
+  - Meta titles if present
+- Keep logo color/style, only text changes
+
+────────────────────────
+C) FIX ROUTER 404 ERRORS
+────────────────────────
+- Identify routes causing:
+  “404 Page Not Found – Did you forget to add the page to the router?”
+- Ensure React Router is correctly configured
+- Navigation links must match real routes
+
+Required routes:
+- /
+- /terrenos
+- /terreno/:slug (or :id)
+- /planes
+- /login
+- /registro
+- /dashboard (or /mi-cuenta)
+- /admin (if role = admin)
+
+────────────────────────
+D) EXPAND FILTERS ON /terrenos
+────────────────────────
+Extend both UI and backend queries.
+
+FILTERS TO ADD:
+1) Ubicación
+- Departamento
+- Ciudad
+- Barrio / Zona (text)
+2) Precio
+- Min / Max
+- Currency: Gs. / USD
+3) Medidas
+- Land size m² (min / max)
+4) Dueño
+- Owner type: Dueño / Comisionista / Otro
+- Owner name (text)
+5) Estrellas
+- Minimum rating (1–5)
+6) Título
+- Con título / Sin título
+7) Condiciones de pago
+- Contado
+- Cuotas
+- Trueque / parte de pago
+8) Ordenamiento
+- A–Z
+- Precio menor → mayor
+- Precio mayor → menor
+- Más nuevos
+
+Rules:
+- Filters must work server-side
+- Only ACTIVE listings appear publicly
+
+────────────────────────
+E) PLANS UPDATE (ADD FREE TRIAL)
+────────────────────────
+Add a new plan:
+
+PLAN 0 – Gratis 1 mes (Trial)
+- Price: Gs. 0
+- Duration: 30 days
+- Max listings: 1
+- Can be activated only ONCE per user
+- After expiration:
+  - user cannot publish
+  - all listings become ARCHIVED automatically
+
+Keep existing plans:
+- Diario: Gs. 8.000 (1 listing)
+- Mensual: Gs. 40.000 (4)
+- 60 días: Gs. 70.000 (5)
+- 90 días: Gs. 100.000 (8)
+- Anual: Gs. 350.000 (12)
+
+Update:
+- /planes page (show free plan first)
+- Dashboard plan info (slots, expiration)
+
+────────────────────────
+F) LISTING RULES (ENFORCE)
+────────────────────────
+- User must have ACTIVE plan + available slot
+- Required:
+  - departamento, ciudad, barrio/zona
+  - google maps link OR coordinates
+  - owner name + owner type
+  - phone mandatory
+  - min 4 photos
+  - land size m² + dimensions
+  - payment condition
+- Price validation:
+  - PYG ≥ 7 digits
+  - USD ≥ 4 digits
+- New listings start as PENDING_VERIFICATION
+- Show banner:
+  “Tu publicación será verificada antes de mostrarse públicamente.”
+
+────────────────────────
+G) ARCHIVING LOGIC
+────────────────────────
+- When plan expires:
+  - all listings → ARCHIVED
+  - archived listings NOT visible publicly
+- Listing detail route must:
+  - return 404 OR
+  - show “Este anuncio no está disponible”
+
+────────────────────────
+H) FINAL CHECK
+────────────────────────
+- App must build and run
+- No broken routes
+- Consistent Montserrat typography everywhere
+- Do NOT remove existing functionality
+
+DELIVERABLE
+- Implement changes in-place
+- Provide a short summary of modified files
