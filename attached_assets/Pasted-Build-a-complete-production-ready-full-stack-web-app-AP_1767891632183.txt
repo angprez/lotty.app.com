@@ -1,0 +1,187 @@
+Build a complete, production-ready full-stack web app.
+
+APP
+Name: Lotty
+Slogan: “Tu pedacito de cielo, a un click”
+Language: Spanish (Paraguay)
+Purpose: Marketplace/clasificados ONLY for land/lots in Paraguay. Users must have a subscription plan to publish listings, but PAYMENTS must NOT be integrated (no Stripe, no MercadoPago). Plans are activated manually by admin for now.
+
+STACK (MANDATORY)
+- Next.js 14+ App Router
+- TypeScript
+- TailwindCSS
+- MySQL 8+ database
+- Prisma ORM with migrations and seed
+- Auth: custom cookie-based sessions (DO NOT use NextAuth to avoid env requirements)
+- Validation: Zod
+- Password hashing: bcrypt
+
+REPLIT REQUIREMENTS
+- App must run on Replit with one command: `npm run dev`
+- Provide database setup for Replit:
+  - Use MySQL connection via env `DATABASE_URL`
+  - Include Prisma migrate + seed steps
+- Provide `.env.example`
+- No required external integrations (NO Stripe).
+
+HOSTINGER TARGET (IMPORTANT)
+- Must also be deployable to Hostinger Node.js Web App later.
+- Provide README with Hostinger steps:
+  - Node 18/20
+  - Build: `npm ci && npx prisma migrate deploy && npm run build`
+  - Start: `npm run start`
+  - Respect `process.env.PORT` (or Next default).
+- Avoid any Replit-only hacks. Keep it standard.
+
+BUSINESS RULES (MANDATORY)
+
+PLANS (prices are informational; no payment integration):
+1) Diario: Gs. 8.000, duration 1 day, maxListings 1
+2) Mensual: Gs. 40.000, duration 30 days, maxListings 4
+3) 60 días: Gs. 70.000, duration 60 days, maxListings 5
+4) 90 días: Gs. 100.000, duration 90 days, maxListings 8
+5) Anual: Gs. 350.000, duration 365 days, maxListings 12
+
+Plan activation:
+- Admin manually assigns plan to a user with an end date.
+- System enforces max listings per active plan.
+
+EXPIRATION / ARCHIVING (CRITICAL CHANGE)
+- When a user’s plan expires:
+  - ALL of that user’s listings automatically become ARCHIVED
+  - ARCHIVED listings are NOT visible publicly:
+    - not on homepage
+    - not in /terrenos search
+    - not accessible via detail URL (return 404)
+  - They remain visible only inside the user dashboard as “Archivado”
+- Admin can unarchive ONLY if user has an active plan.
+
+VERIFICATION FLOW
+- New listing created => PENDING_VERIFICATION
+- Admin reviews:
+  - approve => ACTIVE
+  - reject => REJECTED (must provide reason)
+- Only ACTIVE listings appear publicly.
+
+STRICT LISTING VALIDATIONS (MUST ENFORCE BEFORE SUBMIT)
+All these are required to publish a listing:
+
+Required fields:
+- Title
+- Description
+- Currency: PYG or USD
+- Price rules:
+  - If PYG: must be numeric with at least 7 digits
+  - If USD: must be numeric with at least 4 digits
+- Location:
+  - Department (Paraguay)
+  - City
+  - Barrio/Zone
+- Google Maps:
+  - Must provide a Google Maps link OR coordinates (lat/lng)
+- Land size m² (number)
+- Dimensions (front/back OR width/length)
+- Owner name
+- Owner type: OWNER | COMMISSION_AGENT | OTHER
+- Title status: HAS_TITLE | NO_TITLE
+- If OWNER or COMMISSION_AGENT:
+  - Must upload a title-document image
+  - Owner name must match publisher’s profile full name (validation)
+- Phone number is mandatory
+- Email optional
+- Minimum 4 photos for the listing
+- Payment conditions:
+  - CASH_ONLY
+  - INSTALLMENTS (must include downPayment amount)
+  - BARTER (must describe what is accepted)
+
+Also show a message:
+“Tu publicación será verificada antes de mostrarse públicamente.”
+
+UPLOADS
+- Implement image upload with multipart form
+- Store images locally under `/public/uploads`
+- Validate file types (jpg/png/webp) and max size
+- Store DB records for images
+- Note in README how to later move to cloud storage
+
+CHAT + COUNTEROFFERS (MANDATORY)
+- On each ACTIVE listing:
+  - Logged-in users can open a chat with the publisher
+  - Messages stored in DB
+  - Users can send a counteroffer:
+    - amount + currency
+    - optional message
+    - status: PENDING | ACCEPTED | REJECTED
+- If listing becomes ARCHIVED, chat is disabled.
+
+RATINGS + COMMENTS
+- Logged-in only
+- One rating (1–5) per user per listing (updatable)
+- Comments allowed, admin can delete/disable
+
+PAGES
+
+Public:
+- / (Home): hero, how it works, plan pricing, featured ACTIVE listings
+- /terrenos: list + filters + sorting + pagination (ACTIVE only)
+- /terreno/[slug]: detail (ACTIVE only)
+
+Auth:
+- /registro
+- /login
+- /mi-cuenta (dashboard)
+
+User dashboard:
+- Plan status + end date + remaining slots
+- My listings:
+  - ACTIVE / PENDING_VERIFICATION / REJECTED / ARCHIVED
+- Messages
+- Offers
+
+Admin:
+- /admin (admin only)
+  - KPIs
+  - Pending verification queue (approve/reject)
+  - Manage users: set plan type + end date
+  - Listings management: archive/unarchive, mark featured
+  - Comment moderation
+
+DATA MODEL (Prisma schema)
+Models:
+- User (fullName, phone, email, passwordHash, role)
+- Session (token, userId, expiresAt) for cookie auth
+- Subscription (planType, status, startAt, endAt, maxListings, userId)
+- Listing (all required fields, status, featured, slug, userId, createdAt)
+- ListingImage
+- Rating
+- Comment
+- Chat
+- Message
+- Offer
+- VerificationLog
+Indexes for filtering: department, city, zone, price, landSizeM2, status, featured
+
+BACKGROUND JOB FOR AUTO-ARCHIVE
+- Implement a server-side job that checks expired subscriptions and archives listings.
+- For Replit/Node, implement:
+  - A simple cron-like interval job that runs every X minutes ONLY on server runtime,
+  OR a route `/api/jobs/archiveExpired` that admin can trigger, plus automatic run on server start.
+Document limitations in README for serverless environments.
+
+SEED
+- Seed admin user
+- Seed sample paid user with active plan
+- Seed 6 listings (ACTIVE) in Encarnación, Asunción, etc. with placeholder images
+- Seed some comments/ratings
+
+DELIVERABLES
+- Full codebase
+- README with:
+  - setup
+  - MySQL connection
+  - migrations + seed
+  - run instructions
+  - Hostinger deployment instructions
+- Must run without Stripe. Add a “Payments later” section explaining where to integrate Stripe in Hostinger.
+Do not ask questions; decide reasonable defaults and document them.
