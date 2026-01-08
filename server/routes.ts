@@ -10,6 +10,10 @@ import fs from "fs";
 import express from "express";
 import bcrypt from "bcryptjs";
 import { insertUserSchema, insertListingSchema, insertOfferSchema } from "@shared/schema";
+import pgSession from "connect-pg-simple";
+import { pool } from "./db";
+
+const PgSession = pgSession(session);
 
 const upload = multer({
   storage: multer.diskStorage({
@@ -40,6 +44,21 @@ export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
+  // Session Middleware
+  app.use(session({
+    store: new PgSession({ 
+      pool, 
+      createTableIfMissing: true 
+    }),
+    secret: process.env.SESSION_SECRET || "secret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: { 
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+      secure: process.env.NODE_ENV === "production"
+    }
+  }));
+
   // Serve uploads
   app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 

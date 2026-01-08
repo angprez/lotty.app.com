@@ -2,7 +2,7 @@ import { useListings } from "@/hooks/use-listings";
 import { ListingCard } from "@/components/ListingCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Search, ArrowRight, CheckCircle2, DollarSign, MapPin } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
