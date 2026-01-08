@@ -38,10 +38,10 @@ export default function Home() {
         
         <div className="container relative z-20 px-4 text-center">
           <h1 className="text-4xl md:text-6xl font-display font-bold text-white mb-6 drop-shadow-lg">
-            Tu pedacito de cielo,<br/>a un click de distancia.
+            Lotty:<br/>Tu pedacito de cielo.
           </h1>
           <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto drop-shadow-md">
-            La plataforma más confiable para comprar y vender terrenos en todo Paraguay.
+            La plataforma más simple para comprar y vender terrenos en Paraguay.
           </p>
           
           <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl max-w-3xl mx-auto border border-white/20 shadow-2xl">

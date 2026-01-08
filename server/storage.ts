@@ -123,16 +123,45 @@ export class DatabaseStorage implements IStorage {
       conditions.push(sql`(${listings.title} ILIKE ${`%${filters.search}%`} OR ${listings.description} ILIKE ${`%${filters.search}%`})`);
     }
     if (filters.department) conditions.push(eq(listings.department, filters.department));
-    if (filters.city) conditions.push(eq(listings.city, filters.city));
-    if (filters.zone) conditions.push(eq(listings.zone, filters.zone));
+    if (filters.city) conditions.push(like(listings.city, `%${filters.city}%`));
+    if (filters.zone) conditions.push(like(listings.zone, `%${filters.zone}%`));
     if (filters.status) conditions.push(eq(listings.status, filters.status));
     if (filters.userId) conditions.push(eq(listings.userId, parseInt(filters.userId)));
-    if (filters.minPrice) conditions.push(gte(listings.price, filters.minPrice));
-    if (filters.maxPrice) conditions.push(lte(listings.price, filters.maxPrice));
+    if (filters.minPrice) conditions.push(gte(listings.price, filters.minPrice.toString()));
+    if (filters.maxPrice) conditions.push(lte(listings.price, filters.maxPrice.toString()));
+    if (filters.currency) conditions.push(eq(listings.currency, filters.currency));
+    if (filters.minSize) conditions.push(gte(listings.landSize, filters.minSize.toString()));
+    if (filters.maxSize) conditions.push(lte(listings.landSize, filters.maxSize.toString()));
+    if (filters.ownerType) conditions.push(eq(listings.ownerType, filters.ownerType));
+    if (filters.ownerName) conditions.push(like(listings.ownerName, `%${filters.ownerName}%`));
+    if (filters.titleStatus) conditions.push(eq(listings.titleStatus, filters.titleStatus));
+    if (filters.paymentCondition) conditions.push(eq(listings.paymentCondition, filters.paymentCondition));
 
-    const result = await db.select().from(listings)
-      .where(and(...conditions))
-      .orderBy(desc(listings.createdAt));
+    let query = db.select().from(listings)
+      .where(and(...conditions));
+
+    if (filters.sortBy) {
+      switch (filters.sortBy) {
+        case 'az':
+          query = query.orderBy(listings.title);
+          break;
+        case 'price_asc':
+          query = query.orderBy(listings.price);
+          break;
+        case 'price_desc':
+          query = query.orderBy(desc(listings.price));
+          break;
+        case 'newest':
+          query = query.orderBy(desc(listings.createdAt));
+          break;
+        default:
+          query = query.orderBy(desc(listings.createdAt));
+      }
+    } else {
+      query = query.orderBy(desc(listings.createdAt));
+    }
+
+    const result = await query;
 
     const listingsWithImages = await Promise.all(result.map(async (l) => {
       const images = await db.select().from(listingImages).where(eq(listingImages.listingId, l.id));
@@ -158,7 +187,7 @@ export class DatabaseStorage implements IStorage {
 
   async archiveListingsForUser(userId: number): Promise<void> {
     await db.update(listings)
-      .set({ status: 'archived' })
+      .set({ status: 'archived', updatedAt: new Date() })
       .where(eq(listings.userId, userId));
   }
 

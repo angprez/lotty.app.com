@@ -52,15 +52,17 @@ function Overview() {
     <div className="p-8 space-y-8">
       <h1 className="text-3xl font-bold">Hola, {user?.fullName}</h1>
       
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-2 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">Plan Actual</CardTitle>
-            <Badge variant="secondary">Gratuito</Badge>
+            <Badge variant="secondary">Activo</Badge>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">Básico</div>
-            <p className="text-xs text-muted-foreground mt-1">Sin vencimiento</p>
+            <div className="text-2xl font-bold capitalize">{user?.subscription?.planType.replace('_', ' ') || 'Ninguno'}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              {user?.subscription?.endDate ? `Vence el: ${new Date(user.subscription.endDate).toLocaleDateString()}` : 'Sin plan activo'}
+            </p>
           </CardContent>
         </Card>
         
@@ -70,18 +72,18 @@ function Overview() {
              <List className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-             <div className="text-2xl font-bold">0 / 3</div>
-             <p className="text-xs text-muted-foreground mt-1">Límite de publicaciones</p>
+             <div className="text-2xl font-bold">Ilimitadas</div>
+             <p className="text-xs text-muted-foreground mt-1">Tu plan actual no tiene límites</p>
           </CardContent>
         </Card>
       </div>
 
       <div className="flex justify-between items-center bg-primary/10 p-6 rounded-xl border border-primary/20">
         <div>
-          <h3 className="text-lg font-bold text-primary">¿Quieres publicar más?</h3>
-          <p className="text-sm text-muted-foreground">Mejora tu plan para publicar propiedades ilimitadas y destacadas.</p>
+          <h3 className="text-lg font-bold text-primary">Gestioná tu Plan</h3>
+          <p className="text-sm text-muted-foreground">Renová o cambiá tu suscripción para mantener tus terrenos visibles.</p>
         </div>
-        <Link href="/precios">
+        <Link href="/planes">
           <Button>Ver Planes</Button>
         </Link>
       </div>

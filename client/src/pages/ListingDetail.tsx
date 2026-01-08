@@ -34,6 +34,19 @@ export default function ListingDetail() {
 
   if (!listing) return <div className="p-20 text-center">Terreno no encontrado</div>;
 
+  if (listing.status === 'archived' && user?.id !== listing.userId && user?.role !== 'admin') {
+    return (
+      <div className="container mx-auto px-4 py-20 text-center">
+        <AlertCircle className="h-16 w-16 text-muted-foreground mx-auto mb-6" />
+        <h1 className="text-2xl font-bold mb-2">Este anuncio no está disponible</h1>
+        <p className="text-muted-foreground mb-8">El terreno ha sido archivado o ya no se encuentra a la venta.</p>
+        <Link href="/terrenos">
+          <Button variant="default">Ver otros terrenos</Button>
+        </Link>
+      </div>
+    );
+  }
+
   const handleContact = () => {
     if (!user) {
       toast({ title: "Inicia sesión", description: "Debes ingresar para contactar al vendedor." });

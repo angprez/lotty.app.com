@@ -18,7 +18,7 @@ export function NavBar() {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="font-display text-2xl font-bold text-primary flex items-center gap-2">
-           Lotty.py
+           Lotty
         </Link>
 
         {/* Desktop Nav */}

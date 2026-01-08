@@ -8,6 +8,7 @@ import { Footer } from "@/components/Footer";
 import Home from "@/pages/Home";
 import Listings from "@/pages/Listings";
 import ListingDetail from "@/pages/ListingDetail";
+import Planes from "@/pages/Planes";
 import { Login, Register } from "@/pages/Auth";
 import DashboardLayout from "@/pages/Dashboard";
 import NotFound from "@/pages/not-found";
@@ -21,11 +22,14 @@ function Router() {
           <Route path="/" component={Home} />
           <Route path="/terrenos" component={Listings} />
           <Route path="/terreno/:id" component={ListingDetail} />
+          <Route path="/planes" component={Planes} />
+          <Route path="/precios" component={Planes} />
           
           <Route path="/login" component={Login} />
           <Route path="/registro" component={Register} />
           
           {/* Protected Routes nested in DashboardLayout */}
+          <Route path="/dashboard*" component={DashboardLayout} />
           <Route path="/mi-cuenta*" component={DashboardLayout} />
           
           <Route component={NotFound} />

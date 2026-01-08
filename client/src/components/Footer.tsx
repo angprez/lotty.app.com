@@ -7,7 +7,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <Link href="/" className="font-display text-2xl font-bold text-primary mb-4 block">
-              Lotty.py
+              Lotty
             </Link>
             <p className="text-sm text-muted-foreground">
               La plataforma líder en compra y venta de terrenos en Paraguay. Encuentra tu lugar ideal hoy.
@@ -34,7 +34,7 @@ export function Footer() {
           <div>
             <h4 className="font-bold mb-4">Contacto</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>soporte@lotty.py</li>
+              <li>soporte@lotty.com.py</li>
               <li>Asunción, Paraguay</li>
             </ul>
           </div>

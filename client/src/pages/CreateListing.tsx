@@ -5,10 +5,11 @@ import { useCreateListing } from "@/hooks/use-listings";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { Loader2, AlertCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function CreateListing() {
   const createListing = useCreateListing();
@@ -22,6 +23,7 @@ export default function CreateListing() {
       department: "",
       city: "",
       zone: "",
+      googleMapsLink: "",
       landSize: "",
       dimensions: "",
       ownerName: "",
@@ -39,9 +41,17 @@ export default function CreateListing() {
   return (
     <div className="p-8 max-w-4xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Publicar Terreno</h1>
+        <h1 className="text-3xl font-bold mb-2 font-display">Publicar Terreno</h1>
         <p className="text-muted-foreground">Completa los datos para publicar tu propiedad.</p>
       </div>
+
+      <Alert className="mb-8 bg-blue-50 border-blue-200">
+        <AlertCircle className="h-4 w-4 text-blue-600" />
+        <AlertTitle className="text-blue-800">Importante</AlertTitle>
+        <AlertDescription className="text-blue-700">
+          Tu publicación será verificada antes de mostrarse públicamente.
+        </AlertDescription>
+      </Alert>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -98,6 +108,7 @@ export default function CreateListing() {
                     <FormItem>
                       <FormLabel>Precio</FormLabel>
                       <FormControl><Input type="number" placeholder="0" {...field} /></FormControl>
+                      <FormDescription>Min. 7 dígitos para PYG, 4 para USD.</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -152,6 +163,17 @@ export default function CreateListing() {
               />
               <FormField
                 control={form.control}
+                name="googleMapsLink"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Link de Google Maps</FormLabel>
+                    <FormControl><Input placeholder="https://maps.google.com/..." {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
                 name="landSize"
                 render={({ field }) => (
                   <FormItem>
@@ -176,15 +198,50 @@ export default function CreateListing() {
           </Card>
 
           <Card>
-             <CardHeader><CardTitle>Contacto</CardTitle></CardHeader>
+             <CardHeader><CardTitle>Información del Vendedor</CardTitle></CardHeader>
              <CardContent className="grid gap-6 md:grid-cols-2">
               <FormField
                 control={form.control}
                 name="ownerName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nombre de Contacto</FormLabel>
+                    <FormLabel>Nombre del Dueño/Vendedor</FormLabel>
                     <FormControl><Input {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="ownerType"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Tipo de Vendedor</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
+                      <SelectContent>
+                        <SelectItem value="owner">Dueño</SelectItem>
+                        <SelectItem value="commission_agent">Comisionista</SelectItem>
+                        <SelectItem value="other">Otro</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="titleStatus"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Estado del Título</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
+                      <SelectContent>
+                        <SelectItem value="has_title">Con Título</SelectItem>
+                        <SelectItem value="no_title">Sin Título</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -200,12 +257,30 @@ export default function CreateListing() {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="paymentCondition"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Condición de Pago</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
+                      <SelectContent>
+                        <SelectItem value="cash_only">Contado</SelectItem>
+                        <SelectItem value="installments">Cuotas</SelectItem>
+                        <SelectItem value="barter">Trueque / Parte de pago</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
              </CardContent>
           </Card>
 
           <div className="flex justify-end gap-4">
              <Button type="button" variant="outline" onClick={() => window.history.back()}>Cancelar</Button>
-             <Button type="submit" disabled={createListing.isPending}>
+             <Button type="submit" disabled={createListing.isPending} className="bg-primary hover:bg-primary/90">
                {createListing.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                Publicar Terreno
              </Button>

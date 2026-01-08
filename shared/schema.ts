@@ -27,11 +27,11 @@ export const users = pgTable("users", {
 export const subscriptions = pgTable("subscriptions", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").references(() => users.id).notNull(),
-  planType: text("plan_type").notNull(), // 'diario', 'mensual', '60_dias', '90_dias', 'anual'
+  planType: text("plan_type").notNull(), // 'free_trial', 'monthly', 'annual'
   status: subscriptionStatusEnum("status").default("active").notNull(),
   startDate: timestamp("start_date").defaultNow().notNull(),
   endDate: timestamp("end_date").notNull(),
-  maxListings: integer("max_listings").notNull(),
+  maxListings: integer("max_listings").default(-1).notNull(), // -1 for unlimited
 });
 
 export const listings = pgTable("listings", {

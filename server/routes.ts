@@ -177,12 +177,30 @@ export async function registerRoutes(
       const user = await storage.getUser(req.session.userId);
       
       if (!hasActiveSub && user?.role !== 'admin') {
-         return res.status(403).json({ message: "No active subscription" });
+         return res.status(403).json({ message: "No tenés un plan activo. Activá uno en la sección de Planes." });
       }
 
-      // Check max listings limit? (TODO: implement strict limit check)
-
+      // Strict Validation according to requirements
       const input = api.listings.create.input.parse(req.body);
+      
+      // Price rules: PYG >= 7 digits, USD >= 4 digits
+      if (input.currency === 'PYG' && Number(input.price) < 1000000) {
+        return res.status(400).json({ message: "El precio en Gs. debe ser de al menos 7 dígitos (1.000.000 Gs.)" });
+      }
+      if (input.currency === 'USD' && Number(input.price) < 1000) {
+        return res.status(400).json({ message: "El precio en USD debe ser de al menos 4 dígitos (1.000 USD)" });
+      }
+
+      // Location verification
+      if (!input.department || !input.city || !input.zone) {
+        return res.status(400).json({ message: "Departamento, Ciudad y Zona son obligatorios" });
+      }
+
+      // Map link or coordinates
+      if (!input.googleMapsLink && (!input.lat || !input.lng)) {
+        return res.status(400).json({ message: "Debes proveer un link de Google Maps o coordenadas GPS" });
+      }
+
       const listing = await storage.createListing(input, req.session.userId);
       res.status(201).json(listing);
     } catch (err) {
@@ -316,12 +334,11 @@ export async function registerRoutes(
 
   // --- Background Jobs ---
   
-  // Archive expired subscriptions job (Simple implementation for Replit)
+  // Archive expired subscriptions job
   setInterval(async () => {
     try {
-      console.log("Running auto-archive job...");
-      const users = await storage.getAllUsers();
-      for (const user of users) {
+      const allUsers = await storage.getAllUsers();
+      for (const user of allUsers) {
         if (user.subscription && user.subscription.status === 'active') {
           if (new Date(user.subscription.endDate) < new Date()) {
              console.log(`Subscription expired for user ${user.id}. Archiving listings.`);
@@ -333,7 +350,7 @@ export async function registerRoutes(
     } catch (e) {
       console.error("Job error:", e);
     }
-  }, 60 * 1000); // Every minute
+  }, 10 * 60 * 1000); // Every 10 minutes for production performance
 
 
   // --- Seeding ---
@@ -366,11 +383,11 @@ export async function registerRoutes(
       nextMonth.setDate(now.getDate() + 30);
       await storage.createSubscription({
          userId: user.id,
-         planType: 'mensual',
+         planType: 'monthly',
          status: 'active',
          startDate: now,
          endDate: nextMonth,
-         maxListings: 4
+         maxListings: -1
       });
       
       // Create listing
