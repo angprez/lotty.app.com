@@ -63,12 +63,12 @@ export default function Listings() {
         <Label className="text-base font-bold">Ubicación</Label>
         <Select value={filters.department} onValueChange={(v) => setFilters(f => ({...f, department: v}))}>
           <SelectTrigger><SelectValue placeholder="Departamento" /></SelectTrigger>
-          <SelectContent>
+          <SelectContent className="z-50">
             <SelectItem value="all">Todo el país</SelectItem>
             <SelectItem value="Central">Central</SelectItem>
             <SelectItem value="Alto Paraná">Alto Paraná</SelectItem>
             <SelectItem value="Itapúa">Itapúa</SelectItem>
-          </SelectContent>
+          </SelectContent className="z-50">
         </Select>
         <Input placeholder="Ciudad" value={filters.city} onChange={e => setFilters(f => ({...f, city: e.target.value}))} />
         <Input placeholder="Barrio / Zona" value={filters.zone} onChange={e => setFilters(f => ({...f, zone: e.target.value}))} />
@@ -78,11 +78,11 @@ export default function Listings() {
         <Label className="text-base font-bold">Precio y Moneda</Label>
         <Select value={filters.currency} onValueChange={(v) => setFilters(f => ({...f, currency: v}))}>
           <SelectTrigger><SelectValue placeholder="Moneda" /></SelectTrigger>
-          <SelectContent>
+          <SelectContent className="z-50">
             <SelectItem value="all">Cualquier moneda</SelectItem>
             <SelectItem value="PYG">Gs. (PYG)</SelectItem>
             <SelectItem value="USD">USD ($)</SelectItem>
-          </SelectContent>
+          </SelectContent className="z-50">
         </Select>
         <div className="grid grid-cols-2 gap-2">
           <Input type="number" placeholder="Min" value={filters.minPrice} onChange={e => setFilters(f => ({...f, minPrice: e.target.value}))} />
@@ -102,7 +102,7 @@ export default function Listings() {
         <Label className="text-base font-bold">Dueño y Título</Label>
         <Select value={filters.ownerType} onValueChange={(v) => setFilters(f => ({...f, ownerType: v}))}>
           <SelectTrigger><SelectValue placeholder="Tipo de Vendedor" /></SelectTrigger>
-          <SelectContent>
+          <SelectContent className="z-50">
             <SelectItem value="all">Todos</SelectItem>
             <SelectItem value="owner">Dueño</SelectItem>
             <SelectItem value="commission_agent">Comisionista</SelectItem>
@@ -111,11 +111,11 @@ export default function Listings() {
         </Select>
         <Select value={filters.titleStatus} onValueChange={(v) => setFilters(f => ({...f, titleStatus: v}))}>
           <SelectTrigger><SelectValue placeholder="Estado del Título" /></SelectTrigger>
-          <SelectContent>
+          <SelectContent className="z-50">
             <SelectItem value="all">Todos</SelectItem>
             <SelectItem value="has_title">Con Título</SelectItem>
             <SelectItem value="no_title">Sin Título</SelectItem>
-          </SelectContent>
+          </SelectContent className="z-50">
         </Select>
       </div>
 
@@ -123,12 +123,12 @@ export default function Listings() {
         <Label className="text-base font-bold">Condiciones de Pago</Label>
         <Select value={filters.paymentCondition} onValueChange={(v) => setFilters(f => ({...f, paymentCondition: v}))}>
           <SelectTrigger><SelectValue placeholder="Forma de pago" /></SelectTrigger>
-          <SelectContent>
+          <SelectContent className="z-50">
             <SelectItem value="all">Todas</SelectItem>
             <SelectItem value="cash_only">Contado</SelectItem>
             <SelectItem value="installments">Cuotas</SelectItem>
             <SelectItem value="barter">Trueque / Parte de pago</SelectItem>
-          </SelectContent>
+          </SelectContent className="z-50">
         </Select>
       </div>
 
@@ -151,12 +151,12 @@ export default function Listings() {
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Ordenar por" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="z-50">
               <SelectItem value="newest">Más nuevos</SelectItem>
               <SelectItem value="price_asc">Precio: Menor a Mayor</SelectItem>
               <SelectItem value="price_desc">Precio: Mayor a Menor</SelectItem>
               <SelectItem value="az">Nombre: A-Z</SelectItem>
-            </SelectContent>
+            </SelectContent className="z-50">
           </Select>
 
           <Sheet>
@@ -174,7 +174,7 @@ export default function Listings() {
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <div className="hidden lg:block space-y-6">
-          <div className="bg-card border rounded-xl p-6 shadow-sm sticky top-24">
+          <div className="bg-card border rounded-xl p-6 shadow-sm sticky top-24 relative z-0">
             <FilterContent />
           </div>
         </div>

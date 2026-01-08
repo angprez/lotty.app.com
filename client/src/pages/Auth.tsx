@@ -4,7 +4,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Link, useLocation } from "wouter";
 import { Loader2 } from "lucide-react";
 import { insertUserSchema } from "@shared/schema";
@@ -31,17 +38,25 @@ export function Login() {
         <div className="absolute inset-0 bg-primary/40 mix-blend-multiply" />
         <div className="relative z-10 h-full flex items-center justify-center p-12 text-white">
           <div className="max-w-md">
-            <h1 className="text-4xl font-display font-bold mb-4">Bienvenido a Lotty</h1>
-            <p className="text-lg opacity-90">Ingresa a la comunidad inmobiliaria más grande de Paraguay.</p>
+            <h1 className="text-4xl font-display font-bold mb-4 text-white">
+              Bienvenido a Lotty
+            </h1>
+            <p className="text-lg text-white/90">
+              Ingresa a la comunidad inmobiliaria más grande de Paraguay.
+            </p>
           </div>
         </div>
       </div>
-      
+
       <div className="flex items-center justify-center p-8 bg-background">
         <div className="w-full max-w-md space-y-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-primary mb-2">Iniciar Sesión</h2>
-            <p className="text-muted-foreground">Ingresa tus credenciales para continuar</p>
+            <h2 className="text-3xl font-bold text-primary mb-2">
+              Iniciar Sesión
+            </h2>
+            <p className="text-muted-foreground">
+              Ingresa tus credenciales para continuar
+            </p>
           </div>
 
           <Form {...form}>
@@ -72,15 +87,29 @@ export function Login() {
                   </FormItem>
                 )}
               />
-              
-              <Button type="submit" className="w-full h-11 text-lg" disabled={login.isPending}>
-                {login.isPending ? <Loader2 className="animate-spin" /> : "Ingresar"}
+
+              <Button
+                type="submit"
+                className="w-full h-11 text-lg"
+                disabled={login.isPending}
+              >
+                {login.isPending ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  "Ingresar"
+                )}
               </Button>
             </form>
           </Form>
 
           <div className="text-center text-sm">
-            ¿No tienes cuenta? <Link href="/registro" className="text-primary hover:underline font-semibold">Regístrate aquí</Link>
+            ¿No tienes cuenta?{" "}
+            <Link
+              href="/registro"
+              className="text-primary hover:underline font-semibold"
+            >
+              Regístrate aquí
+            </Link>
           </div>
         </div>
       </div>
@@ -98,8 +127,8 @@ export function Register() {
       password: "",
       fullName: "",
       phone: "",
-      role: "user"
-    }
+      role: "user",
+    },
   });
 
   const onSubmit = (data: z.infer<typeof insertUserSchema>) => {
@@ -111,8 +140,12 @@ export function Register() {
       <div className="flex items-center justify-center p-8 bg-background order-2 md:order-1">
         <div className="w-full max-w-md space-y-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-primary mb-2">Crear Cuenta</h2>
-            <p className="text-muted-foreground">Únete hoy y empieza a publicar</p>
+            <h2 className="text-3xl font-bold text-primary mb-2">
+              Crear Cuenta
+            </h2>
+            <p className="text-muted-foreground">
+              Únete hoy y empieza a publicar
+            </p>
           </div>
 
           <Form {...form}>
@@ -169,15 +202,29 @@ export function Register() {
                   </FormItem>
                 )}
               />
-              
-              <Button type="submit" className="w-full h-11 text-lg" disabled={register.isPending}>
-                {register.isPending ? <Loader2 className="animate-spin" /> : "Crear Cuenta"}
+
+              <Button
+                type="submit"
+                className="w-full h-11 text-lg"
+                disabled={register.isPending}
+              >
+                {register.isPending ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  "Crear Cuenta"
+                )}
               </Button>
             </form>
           </Form>
 
           <div className="text-center text-sm">
-            ¿Ya tienes cuenta? <Link href="/login" className="text-primary hover:underline font-semibold">Inicia Sesión</Link>
+            ¿Ya tienes cuenta?{" "}
+            <Link
+              href="/login"
+              className="text-primary hover:underline font-semibold"
+            >
+              Inicia Sesión
+            </Link>
           </div>
         </div>
       </div>
@@ -186,8 +233,12 @@ export function Register() {
         <div className="absolute inset-0 bg-secondary/40 mix-blend-multiply" />
         <div className="relative z-10 h-full flex items-center justify-center p-12 text-white">
           <div className="max-w-md text-right">
-            <h1 className="text-4xl font-display font-bold mb-4">Encuentra tu lugar</h1>
-            <p className="text-lg opacity-90">Miles de terrenos te esperan en nuestra plataforma.</p>
+            <h1 className="text-4xl font-display font-bold mb-4 text-white">
+              Encuentra tu lugar
+            </h1>
+            <p className="text-lg opacity-90">
+              Miles de terrenos te esperan en nuestra plataforma.
+            </p>
           </div>
         </div>
       </div>
